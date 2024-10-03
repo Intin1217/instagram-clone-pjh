@@ -1,13 +1,20 @@
 import DefaultButton from '../../DefaultButton.tsx';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { GoLink } from 'react-icons/go';
-import { useFetchProfileImage, useProfileImage, useProfileInfo } from '../../../store/store.ts';
+import {
+  useFetchProfileImage,
+  useModal,
+  useModalType,
+  useProfileImage,
+  useProfileInfo,
+} from '../../../store/store.ts';
 
 export default function MyPageHeader() {
   const imageUrl = useProfileImage((state) => state.imageUrl);
   useFetchProfileImage();
-
   const { profileInfo } = useProfileInfo();
+  const { modalType, setModalType } = useModalType();
+  const { setIsOpen } = useModal();
   return (
     <header className="flex justify-center w-full bg-blue-450 border-b-gray-200">
       <div className="flex mt-10 gap-16">
@@ -17,7 +24,14 @@ export default function MyPageHeader() {
         <div className="flex flex-col gap-2">
           <div className="flex gap-3">
             <span className="font-bold text-lg">{profileInfo!.id}</span>
-            <DefaultButton name={'프로필 편집'} />
+            <DefaultButton
+              name={'프로필 편집'}
+              onClick={() => {
+                setModalType!('ProfileEdit');
+                console.log(modalType);
+                setIsOpen!(true);
+              }}
+            />
             <DefaultButton name={'보관된 스토리 보기'} />
             <IoSettingsOutline className="size-8" />
           </div>

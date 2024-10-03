@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { PostExisting, ProfileInfo } from './type.ts';
+import { PostExisting, ProfileInfo, ModalType } from './type.ts';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/firebaseConfig.ts';
 import { useEffect } from 'react';
@@ -41,7 +41,7 @@ export const useProfileImage = create<ProfileInfo>((set) => ({
     set({ imageUrl: url });
   },
 }));
-//프로필 정보 상태
+//프로필 정보 상태 이부분 파이어베이스에 작성해서 불러오게끔 해야함~
 export const useProfileInfo = create<ProfileInfo>((set) => ({
   profileInfo: {
     id: 'hello.world',
@@ -50,14 +50,15 @@ export const useProfileInfo = create<ProfileInfo>((set) => ({
     profileExplanation: 'Hello, World!',
   },
   setProfileInfo: ({ inputId, inputName, inputWebSiteUrl, inputProfileExplanation }) => {
-    set({
+    set((prev) => ({
       profileInfo: {
+        ...prev,
         id: inputId,
         name: inputName,
         webSiteUrl: inputWebSiteUrl,
         profileExplanation: inputProfileExplanation,
       },
-    });
+    }));
   },
 }));
 // 게시물 있나 없나 상태?
@@ -66,5 +67,19 @@ export const usePostExistence = create<PostExisting>((set) => ({
   postExistence: false,
   setPostExistence: () => {
     set({ postExistence: true });
+  },
+}));
+//모달 on off
+export const useModal = create<ModalType>((set) => ({
+  isOpen: false,
+  setIsOpen: (isOpen) => {
+    set({ isOpen: isOpen });
+  },
+}));
+//모달 타입
+export const useModalType = create<ModalType>((set) => ({
+  modalType: 'Default',
+  setModalType: (stateModal) => {
+    set({ modalType: stateModal });
   },
 }));

@@ -1,6 +1,7 @@
 import MyPage from './components/MyPage/MyPage.tsx';
 import MyPageSide from './components/MyPageSide/MyPageSide.tsx';
 import { ModalPortal } from './components/Modal/ModalPortal/ModalPortal.tsx';
+import ModalView from './components/Modal/ModalView/ModalView.tsx';
 
 function App() {
   return (
@@ -9,7 +10,9 @@ function App() {
       <div>
         <MyPage />
       </div>
-      <ModalPortal></ModalPortal>
+      <ModalPortal>
+        <ModalView />
+      </ModalPortal>
     </div>
   );
 }

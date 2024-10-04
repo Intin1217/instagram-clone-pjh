@@ -5,10 +5,13 @@ import { GoHome } from 'react-icons/go';
 import { BiSend } from 'react-icons/bi';
 import { MdOutlineContacts } from 'react-icons/md';
 import instagramLogo from '../../assets/instagram_logo.svg';
+import { useModal, useModalType } from '../../store/store.ts';
 
 export default function MyPageSide() {
   const MenuBox = 'flex p-2 gap-2';
-  const pTagBox = 'pt-1';
+  const pTagBox = 'pt-1 fixed';
+  const { modalType, setModalType } = useModalType();
+  const { setIsOpen } = useModal();
   return (
     <div className="h-full p-6 pl-0 pt-0 flex flex-col w-[280px] border-gray-200 border-r">
       <div className="pl-6 m-0">
@@ -53,7 +56,14 @@ export default function MyPageSide() {
             <p className={pTagBox}>알림</p>
           </a>
         </li>
-        <li className={MenuBox}>
+        <li
+          onClick={() => {
+            setModalType!('PostAdd');
+            console.log(modalType);
+            setIsOpen!(true);
+          }}
+          className={MenuBox}
+        >
           <IoAddCircleOutline className="size-8" />
           <a href={'#'}>
             <p className={pTagBox}>만들기</p>

@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import { PostExisting, ProfileInfo, ModalType } from './type.ts';
+import { PostExisting, ProfileInfo, ModalType, ProfileDataFirebase, PostType } from './type.ts';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { storage } from '../config/firebaseConfig.ts';
+import { db, storage } from '../config/firebaseConfig.ts';
 import { useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
 
 const defaultImageRef = ref(storage, '/user/img/default_profile.svg');
 
@@ -27,13 +28,57 @@ export const useFetchProfileImage = () => {
   }, [setImageUrl]);
 };
 
-/// 상태들 아래 쪽
-// export const useName = create<ProfileInfo>((set) => ({
-//   name: 'hello.world',
-//   setName: (name) => {
-//     set({ name: name });
-//   },
-// }));
+//파이어베이스 컬렉션 불러오기 프로필 내용임~ 흠...
+export const useStore = create<ProfileDataFirebase>((set) => ({
+  user: [],
+  fetchUser: async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'Default-User'));
+
+      const userData = querySnapshot.docs.map((doc) => {
+        const data = doc.data(); // Firestore 문서 데이터를 가져옴
+
+        return {
+          id: doc.id, // 문서 ID
+          userID: data.userID || '', // Firestore 문서의 userID 필드
+          name: data.name || '', // Firestore 문서의 name 필드
+          webSiteUrl: data.webSiteUrl || '', // Firestore 문서의 webSiteUrl 필드
+          profileExplanation: data.profileExplanation || '', // Firestore 문서의 profileExplanation 필드
+        };
+      });
+
+      set({ user: userData });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  set,
+}));
+
+//포스트 가져오기 타입 any는 임시용
+export const usePost = create<PostType>((set) => ({
+  post: [],
+  fetchPost: async () => {
+    try {
+      const { setPostExistence } = usePostExistence.getState();
+      const postSnapshot = await getDocs(collection(db, 'post'));
+      const posts = postSnapshot.docs.map((doc) => ({
+        postId: doc.data().id,
+        imgUrl: doc.data().imgUrl,
+        text: doc.data().text,
+      }));
+      if (posts.length > 0) {
+        setPostExistence(true);
+      } else {
+        setPostExistence(false);
+      }
+      set({ post: posts });
+    } catch (error) {
+      console.error('데이터 가져오기 실패', error);
+    }
+  },
+}));
+
 // 프로필 이미지 URL 상태
 export const useProfileImage = create<ProfileInfo>((set) => ({
   imageUrl: '',
@@ -63,10 +108,9 @@ export const useProfileInfo = create<ProfileInfo>((set) => ({
 }));
 // 게시물 있나 없나 상태?
 export const usePostExistence = create<PostExisting>((set) => ({
-  //임시 true 기존값 false
   postExistence: false,
-  setPostExistence: () => {
-    set({ postExistence: true });
+  setPostExistence: (postExistence) => {
+    set({ postExistence: postExistence });
   },
 }));
 //모달 on off

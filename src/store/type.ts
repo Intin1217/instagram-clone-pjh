@@ -21,7 +21,7 @@ export interface ProfileInfo {
 
 export interface PostExisting {
   postExistence: boolean;
-  setPostExistence: () => void;
+  setPostExistence: (exists: boolean) => void;
 }
 // 포스트 있고 없고 체크하는 거 타입
 
@@ -32,4 +32,24 @@ export interface ModalType {
     stateModal: 'Default' | 'PostView' | 'PostAdd' | 'PostInfoEdit' | 'ProfileEdit',
   ) => void;
   setIsOpen?: (isOpen: boolean) => void;
+}
+
+export interface ProfileDataFirebase {
+  user: {
+    id: string;
+    userID: string;
+    name: string;
+    webSiteUrl: string;
+    profileExplanation: string;
+  }[];
+  fetchUser: () => Promise<void>;
+  set: (partial: Partial<ProfileDataFirebase>) => void;
+}
+export interface PostType {
+  post: {
+    postId: string;
+    imgUrl: string;
+    text: string;
+  }[];
+  fetchPost: () => Promise<void>;
 }

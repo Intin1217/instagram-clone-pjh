@@ -12,6 +12,7 @@ export default function MyPageMain() {
 
   return postExistence ? (
     <main className="bg-gray-500">
+      <p>db에 이미지 임의로 주소 넣은 것들 나중에 업로드해서 url넣고 출력되게</p>
       <div className="flex gap-3">
         {post.map((post) => (
           <img

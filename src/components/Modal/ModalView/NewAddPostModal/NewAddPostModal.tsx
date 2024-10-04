@@ -5,6 +5,7 @@ import { useState } from 'react';
 //여기는 사진 선택해서 포스트 추가하는 모달
 export default function NewAddPostModal() {
   const { isOpen, setIsOpen } = useModal();
+  //임시 테스트용...?
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const onClickUpload = () => {

@@ -1,7 +1,6 @@
 import { useModal } from '../../../../store/store.ts';
 import { IoCloseOutline } from 'react-icons/io5';
 import { RiFolderImageLine } from 'react-icons/ri';
-import DefaultButton from '../../../DefaultButton.tsx';
 import { useState } from 'react';
 //여기는 사진 선택해서 포스트 추가하는 모달
 export default function NewAddPostModal() {
